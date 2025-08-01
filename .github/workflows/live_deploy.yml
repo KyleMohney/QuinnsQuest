@@ -13,4 +13,4 @@ jobs:
           echo "${{ secrets.HUBQUEST_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H hubquest.com >> ~/.ssh/known_hosts
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 user@hubquest.com "echo '✅ SSH connection successful!'"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 kyle.mohney@hotmail.com "echo '✅ SSH connection successful!'"
