@@ -1,16 +1,23 @@
-name: Quinn's Quest Auto-Fix & Deploy (Test SSH)
+name: Deploy Quinn's Quest to GitHub Pages
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  test-ssh:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up SSH and test connection
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.HUBQUEST_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H hubquest.com >> ~/.ssh/known_hosts
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 kyle.mohney@hotmail.com "echo '✅ SSH connection successful!'"
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build and Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages  # The branch the action should deploy to
+          folder: .         # The folder to deploy
