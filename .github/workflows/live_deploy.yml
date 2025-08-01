@@ -7,8 +7,36 @@ on:
       - main
 
 jobs:
-  test:
+  fix-test-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Confirm workflow works
-        run: echo "✅ Workflow is now working and ready for real fixes!"
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fix asset paths and preload
+        run: |
+          echo "🔧 Fixing asset paths and preload lists..."
+          # Here we will add actual scripts in the next phase
+
+      - name: Test game build
+        run: |
+          echo "🧪 Testing the game build..."
+          # Placeholder for headless game test script
+
+      - name: Setup SSH for HubQuest
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HUBQUEST_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H hubquest.com >> ~/.ssh/known_hosts
+
+      - name: Deploy to HubQuest
+        run: |
+          echo "🚀 Deploying live to HubQuest..."
+          # Replace 'user' and '/path/to/project' with actual values
+          ssh -i ~/.ssh/id_ed25519 user@hubquest.com \
+            "cd /path/to/project && git pull origin main"
