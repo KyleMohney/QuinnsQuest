@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quinn's Quest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+      background: #87CEEB; /* Sky blue backdrop */
+    }
+    #loadingScreen, #startScreen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      font-size: 2rem;
+      z-index: 10;
+    }
+    #startButton {
+      margin-top: 20px;
+      padding: 15px 30px;
+      background: #f4a261;
+      border: 2px solid #fff;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    #startButton:hover {
+      background: #e76f51;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading screen -->
+  <div id="loadingScreen">Loading Quinn's Quest...</div>
+
+  <!-- Start screen -->
+  <div id="startScreen" style="display:none;">
+    <h1>Quinn's Quest</h1>
+    <button id="startButton">Start Game</button>
+  </div>
+
+  <!-- Main canvas -->
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- Engine + Level scripts -->
+  <script src="quinn_engine.js"></script>
+  <script>
+    const engine = new QuinnQuestEngine("gameCanvas");
+    const loadingScreen = document.getElementById("loadingScreen");
+    const startScreen = document.getElementById("startScreen");
+    const startButton = document.getElementById("startButton");
+
+    // Preload assets (list all images & sounds you plan to use)
+    const imageList = [
+      "quinn_idle.png",
+      "quinn_run1.png",
+      "quinn_run2.png",
+      "fireball.png",
+      "goblin_run1.png",
+      "goblin_run2.png",
+      "bandit_leader_idle.png",
+      "bandit_leader_dead.png",
+      "towngates.png"
+    ];
+    const soundList = [
+      "quinn_begin.mp3",
+      "goblin_attack.wav",
+      "magic_bolt.wav"
+    ];
+
+    // Load everything
+    Promise.all([
+      engine.preloadImages(imageList),
+      engine.preloadSounds(soundList)
+    ]).then(() => {
+      loadingScreen.style.display = "none";
+      startScreen.style.display = "flex";
+    }).catch((err) => {
+      console.error("Error loading assets:", err);
+    });
+
+    // Start game on button click
+    startButton.addEventListener("click", () => {
+      startScreen.style.display = "none";
+
+      // Load first level
+      engine.loadLevel("level1.js").then(() => {
+        // Optional: play intro sound
+        if (engine.sounds["quinn_begin.mp3"]) {
+          engine.sounds["quinn_begin.mp3"].play();
+        }
+        engine.start();
+      }).catch((err) => {
+        console.error("Failed to start level:", err);
+      });
+    });
+  </script>
+</body>
+</html>
