@@ -238,7 +238,7 @@ class QuinnQuestEngine {
     document.body.appendChild(this.debugElement);
 
     window.addEventListener("keydown", (e) => {
-      if (e.key === "`") {
+      if (e.key === "d") {
         this.debugMode = !this.debugMode;
         this.debugElement.style.display = this.debugMode ? "block" : "none";
       }
