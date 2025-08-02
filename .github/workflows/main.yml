@@ -1,14 +1,25 @@
-﻿name: KJM-Bots Automation
+name: KJM-Bots Automation
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
 
 jobs:
-  build:
+  automate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
-      - name: Run automation tasks
-        run: echo "KJM-Bots is connected and ready to automate."
+      - name: Make visible test edit
+        run: |
+          echo "// KJM-Bots Connected" >> quinn_engine.js
+      - name: Commit and push changes
+        run: |
+          git config user.name "KJM-Bots"
+          git config user.email "kyle.mohney@hotmail.com"
+          git add quinn_engine.js
+          git commit -m "Test edit: Add KJM-Bots connection message"
+          git push
