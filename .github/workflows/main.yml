@@ -1,0 +1,14 @@
+﻿name: KJM-Bots Automation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run automation tasks
+        run: echo "KJM-Bots is connected and ready to automate."
