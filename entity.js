@@ -134,7 +134,8 @@ function updateEnemies(dt) {
         ) {
             if (enemy.casting > 0) {
                 enemy.casting++;
-                const castFrame = Math.floor(30 * 0.4);
+                // Ensure castFrame is always at least 1 so projectile logic is reached
+                const castFrame = Math.max(1, Math.floor(30 * 0.4));
                 if (enemy.casting === castFrame) {
                     let type, vx, xOffset, width, height, damage;
 
@@ -145,6 +146,7 @@ function updateEnemies(dt) {
                         width = 96;
                         height = 64;
                         damage = 1;
+                        magicYOffset = enemy.height / 2 - height / 2; // Waist height
                     } 
                     else if (enemy.spriteSet === "bandit_crossbow") {
                         type = "crossbow_bolt";
@@ -153,6 +155,7 @@ function updateEnemies(dt) {
                         width = 64;
                         height = 16;
                         damage = 2;
+                        magicYOffset = enemy.height / 2 - height / 2; // Waist height
                     } 
                     else if (enemy.spriteSet === "necromancer" || enemy.spriteSet === "zombie_lord" || enemy.spriteSet === "bandit_lord") {
                         type = "evil_magic";
@@ -168,16 +171,21 @@ function updateEnemies(dt) {
                         }
                         damage = 2;
                         // Lower Bandit Lord's magic spawn Y so it can hit the player
-                        var magicYOffset = (enemy.spriteSet === "bandit_lord")
-                            ? enemy.height - height - 24 // Near feet
-                            : enemy.height / 2 - height / 2;
+                        var magicYOffset;
+                        if (enemy.spriteSet === "bandit_lord") {
+                            magicYOffset = enemy.height - height - 24; // Near feet
+                        } else {
+                            magicYOffset = enemy.height / 2 - height / 2; // Waist height
+                        }
                     }
 
+                    const px = enemy.x + xOffset;
+                    const py = enemy.y + magicYOffset;
                     projectiles.push({
                         type,
                         owner: "enemy",
-                        x: enemy.x + xOffset,
-                        y: enemy.y + magicYOffset,
+                        x: px,
+                        y: py,
                         vx,
                         vy: 0,
                         width,
@@ -217,8 +225,8 @@ function updateEnemies(dt) {
                 enemy.casting = 1;
                 if (enemy.spriteSet === "big_goblin") enemy.sprite = "goblin_magic";
                 else if (enemy.spriteSet === "necromancer") enemy.sprite = "necromancer_magic";
-                else if (enemy.spriteSet === "zombie_lord") enemy.sprite = "necromancer_magic";
-                else if (enemy.spriteSet === "bandit_lord") enemy.sprite = "necromancer_magic";
+                else if (enemy.spriteSet === "zombie_lord") enemy.sprite = "zombie_lord_magic";
+                else if (enemy.spriteSet === "bandit_lord") enemy.sprite = "bandit_lord_magic";
                 else enemy.sprite = "idle"; // bandit_crossbow
                 continue;
             }
@@ -274,7 +282,7 @@ function updateEnemies(dt) {
                     enemy.attackTimer = 20;
                     break;
                 case "bandit_lord":
-                    enemy.attackTimer = 24;
+                    enemy.attackTimer = 12; // Faster attack animation
                     break;
                 case "hound":
                     enemy.attackTimer = 18;
@@ -881,7 +889,8 @@ function handleBanditLordDefeat(enemy) {
     setTimeout(function() {
         showSubtitle("No, you've defeated me.", 1800);
         setTimeout(function() {
-            playSound("quinn-win.mp3", window.volumeVoices);
+            stopAllSounds(); // Ensure Quinn's line takes priority
+            playSound("quinn-win", window.volumeVoices);
             showSubtitle("I won. Let's go home, Claire.", 2200);
         }, 1800);
     }, 500); // Start after Bandit Lord death sound

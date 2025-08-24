@@ -266,7 +266,9 @@ let coinCount = 0;          // Coins collected in current level
 
 function startGame() {
     stopAllSounds();
-    playSound("title", window.volumeMusic);
+    setTimeout(function() {
+        playSound("title", window.volumeMusic);
+    }, 100);
     gameState = "title";
     resizeCanvas();
     requestAnimationFrame(gameLoop);
@@ -274,7 +276,8 @@ function startGame() {
 
 //END LEVEL LOGIC
 function endLevel7() {
-        stopAllSounds();
+    stopAllSounds();
+    // Ensure title music is stopped before starting next level
         playSound("win", window.volumeMusic);
         gameState = "credits";
         nextLevelClicked = false;

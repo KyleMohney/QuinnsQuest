@@ -26,7 +26,7 @@ function startLevel5() {
     setTimeout(() => {
         console.log("[Level 5] Triggering Quinn sound and subtitle");
         playSound("quinn5", window.volumeVoices);
-        showSubtitle("I have to get down this scary road.", 2200);
+        showSubtitle("I have to through this scary road.", 2200);
     }, 300); // Match delay with other levels
     setTimeout(() => playSound("background5", window.volumeMusic), 2000);
 

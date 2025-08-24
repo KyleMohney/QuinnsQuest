@@ -38,11 +38,11 @@ window.updatePlayer = function(dt) {
         let speed = 18; // Default for levels 1, 2, 3
         if (typeof currentLevel !== 'undefined') {
             if (currentLevel === 4) {
-                speed = 15;
+                speed = 20; // Increased by 2 for level 4
             } else if (currentLevel === 5) {
-                speed = 17; // Increased by 1 point for level 5
+                speed = 21; // Increased by 3 for level 5
             } else if (currentLevel === 6) {
-                speed = 20; // Increased by 4 points for level 6
+                speed = 21; // Increased by 3 for level 6
             }
         }
         if (keys["ArrowLeft"]) {
